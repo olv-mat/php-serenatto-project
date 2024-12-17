@@ -1,58 +1,10 @@
 <?php
 
-$coffeeProducts = [
-    [
-        "name" => "Café Cremoso", 
-        "description" => "Café cremoso irresistivelmente suave e que envolve seu paladar.",
-        "price" => "5.00","image" => 
-        "img/cafe-cremoso.jpg"
-    ],
-    [
-        "name" => "Café com Leite", 
-        "description" => "A harmonia perfeita do café e do leite, uma experiência reconfortante.",
-        "price" => "2.00",
-        "image" => "img/cafe-com-leite.jpg"
-    ],
-    [
-        "name" => "Cappuccino", 
-        "description" => "Café suave, leite cremoso e uma pitada de sabor adocicado.",
-        "price" => "7.00", 
-        "image" => "img/cappuccino.jpg"
-    ],
-    [
-        "name" => "Café Gelado", 
-        "description" => "Café gelado refrescante, adoçado e com notas sutis de baunilha ou caramelo.",
-        "price" => "3.00", 
-        "image" => "img/cafe-gelado.jpg"
-    ]
-];
+require "src/database_connection.php";
 
-$lunchProducts = [
-    [
-        "name" => "Bife", 
-        "description" => "Bife, arroz com feijão e uma deliciosa batata frita.",
-        "price" => "27.90",
-        "image" => "img/bife.jpg"
-    ],
-    [
-        "name" => "Filé de peixe", 
-        "description" => "Filé de peixe salmão assado, arroz, feijão verde e tomate.",
-        "price" => "24.99",
-        "image" => "img/prato-peixe.jpg"
-    ],
-    [
-        "name" => "Frango", 
-        "description" => "Saboroso frango à milanesa com batatas fritas, salada de repolho e molho picante.",
-        "price" => "23.00", 
-        "image" => "img/prato-frango.jpg"
-    ],
-    [
-        "name" => "Fettuccine", 
-        "description" => "Prato italiano autêntico da massa do fettuccine com peito de frango grelhado.",
-        "price" => "22.50", 
-        "image" => "img/fettuccine.jpg"
-    ]
-];
+$pdo = createConnection();
+$stmt = $pdo->query("SELECT * FROM products ORDER BY price ASC");
+$products = $stmt->fetchAll();
 
 ?>
 
@@ -85,15 +37,17 @@ $lunchProducts = [
                     <img class= "ornaments" src="img/ornaments-coffee.png" alt="ornaments">
                 </div>
                 <div class="container-cafe-manha-produtos">
-                    <?php foreach ($coffeeProducts as $product) :?>
-                        <div class="container-produto">
-                            <div class="container-foto">
-                                <img src="<?= $product["image"] ?>">
+                    <?php foreach ($products as $product) :?>
+                        <?php if ($product["type"] == "Café") :?>
+                            <div class="container-produto">
+                                <div class="container-foto">
+                                    <img src="img/<?= $product["image"] ?>">
+                                </div>
+                                <p><?= $product["name"] ?></p>
+                                <p><?= $product["description"] ?></p>
+                                <p><?= "R$ " . $product["price"] ?></p>
                             </div>
-                            <p><?= $product["name"] ?></p>
-                            <p><?= $product["description"] ?></p>
-                            <p><?= "R$ " . $product["price"] ?></p>
-                        </div>
+                        <?php endif ?>
                     <?php endforeach ?>
                 </div>
             </section>
@@ -103,16 +57,19 @@ $lunchProducts = [
                     <img class= "ornaments" src="img/ornaments-coffee.png" alt="ornaments">
                 </div>
                 <div class="container-almoco-produtos">
-                    <?php foreach ($lunchProducts as $product) :?>
-                    <div class="container-produto">
-                        <div class="container-foto">
-                            <img src="<?= $product["image"] ?>">
-                        </div>
-                        <p><?= $product["name"] ?></p>
-                        <p><?= $product["description"] ?></p>
-                        <p><?= "R$ " . $product["price"] ?></p>
-                    </div>
+                    <?php foreach ($products as $product) :?>
+                        <?php if ($product["type"] == "Almoço") :?>
+                            <div class="container-produto">
+                                <div class="container-foto">
+                                    <img src="img/<?= $product["image"] ?>">
+                                </div>
+                                <p><?= $product["name"] ?></p>
+                                <p><?= $product["description"] ?></p>
+                                <p><?= "R$ " . $product["price"] ?></p>
+                            </div>
+                        <?php endif ?>
                     <?php endforeach ?>
+                </div>
             </section>
         </main>
     </body>
