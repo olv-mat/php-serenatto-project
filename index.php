@@ -1,10 +1,21 @@
 <?php
 
 require "src/database_connection.php";
+require "src/Model/Product.php";
 
 $pdo = createConnection();
 $stmt = $pdo->query("SELECT * FROM products ORDER BY price ASC");
 $products = $stmt->fetchAll();
+$productsObjArray = array_map(function ($product){
+    return new Product(
+        $product["id"], 
+        $product["type"], 
+        $product["name"], 
+        $product["description"], 
+        $product["image"],
+        $product["price"]
+    );
+}, $products);
 
 ?>
 
@@ -37,15 +48,15 @@ $products = $stmt->fetchAll();
                     <img class= "ornaments" src="img/ornaments-coffee.png" alt="ornaments">
                 </div>
                 <div class="container-cafe-manha-produtos">
-                    <?php foreach ($products as $product) :?>
-                        <?php if ($product["type"] == "Café") :?>
+                    <?php foreach ($productsObjArray as $product) :?>
+                        <?php if ($product->getType() == "Café") :?>
                             <div class="container-produto">
                                 <div class="container-foto">
-                                    <img src="img/<?= $product["image"] ?>">
+                                    <img src="<?= $product->getImage() ?>">
                                 </div>
-                                <p><?= $product["name"] ?></p>
-                                <p><?= $product["description"] ?></p>
-                                <p><?= "R$ " . $product["price"] ?></p>
+                                <p><?= $product->getName() ?></p>
+                                <p><?= $product->getDescription() ?></p>
+                                <p><?= $product->getPrice() ?></p>
                             </div>
                         <?php endif ?>
                     <?php endforeach ?>
@@ -57,15 +68,15 @@ $products = $stmt->fetchAll();
                     <img class= "ornaments" src="img/ornaments-coffee.png" alt="ornaments">
                 </div>
                 <div class="container-almoco-produtos">
-                    <?php foreach ($products as $product) :?>
-                        <?php if ($product["type"] == "Almoço") :?>
+                    <?php foreach ($productsObjArray as $product) :?>
+                        <?php if ($product->getType() == "Almoço") :?>
                             <div class="container-produto">
                                 <div class="container-foto">
-                                    <img src="img/<?= $product["image"] ?>">
+                                    <img src="<?= $product->getImage() ?>">
                                 </div>
-                                <p><?= $product["name"] ?></p>
-                                <p><?= $product["description"] ?></p>
-                                <p><?= "R$ " . $product["price"] ?></p>
+                                <p><?= $product->getName() ?></p>
+                                <p><?= $product->getDescription() ?></p>
+                                <p><?= $product->getPrice() ?></p>
                             </div>
                         <?php endif ?>
                     <?php endforeach ?>
