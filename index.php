@@ -1,21 +1,12 @@
 <?php
 
-require "src/database_connection.php";
+require "src/Infrastructure/ConnectionCreator.php";
+require "src/Infrastructure/ProductRepository.php";
 require "src/Model/Product.php";
 
-$pdo = createConnection();
-$stmt = $pdo->query("SELECT * FROM products ORDER BY price ASC");
-$products = $stmt->fetchAll();
-$productsObjArray = array_map(function ($product){
-    return new Product(
-        $product["id"], 
-        $product["type"], 
-        $product["name"], 
-        $product["description"], 
-        $product["image"],
-        $product["price"]
-    );
-}, $products);
+$conn = ConnectionCreator::createConnection();
+$repository = new ProductRepository($conn);
+$products = $repository->getProducts();
 
 ?>
 
@@ -48,7 +39,7 @@ $productsObjArray = array_map(function ($product){
                     <img class= "ornaments" src="img/ornaments-coffee.png" alt="ornaments">
                 </div>
                 <div class="container-cafe-manha-produtos">
-                    <?php foreach ($productsObjArray as $product) :?>
+                    <?php foreach ($products as $product) :?>
                         <?php if ($product->getType() == "Café") :?>
                             <div class="container-produto">
                                 <div class="container-foto">
@@ -68,7 +59,7 @@ $productsObjArray = array_map(function ($product){
                     <img class= "ornaments" src="img/ornaments-coffee.png" alt="ornaments">
                 </div>
                 <div class="container-almoco-produtos">
-                    <?php foreach ($productsObjArray as $product) :?>
+                    <?php foreach ($products as $product) :?>
                         <?php if ($product->getType() == "Almoço") :?>
                             <div class="container-produto">
                                 <div class="container-foto">
